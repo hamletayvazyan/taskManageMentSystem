@@ -21,11 +21,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Auth::routes();
 Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function (){
-    Route::resource('tasks', 'TaskController');
+    Route::resource('user_tasks', 'TaskController');
+    Route::post('changeStatus/{id}', 'TaskController@changeStatus');
     Route::get('/users', function (Request $request){
         return new UsersCollection($request->user());
     });
 });
-
 Route::get('/tasks', 'HomeController@index');
+Route::get('/show/{id}', 'HomeController@show');
+Route::post('/search', 'HomeController@search');
 Route::post('/checkLogin', 'HomeController@checkLogin');

@@ -52,14 +52,14 @@
 </template>
 
 <script>
-    import {api_point} from "../../enviroment";
+    import {authService} from '../../services/auth.service'
 
     export default {
         name: "RegisterComponent",
         data() {
             return {
                 form: {
-                    email: 'qwerty@em.co',
+                    email: 'qwertyu@em.ru',
                     name: 'asd',
                     password: 'asd',
                     password_confirmation: 'asd',
@@ -68,19 +68,11 @@
             }
         },
         methods: {
-            onSubmit(evt) {
+            async onSubmit(evt) {
                 evt.preventDefault();
-                console.log(this.form);
-                axios.post(`${api_point}/register`, this.form)
-                    .then((r) => {
-                        if (r.data.success) {
-                            localStorage.setItem('token', r.data.token);
-                            localStorage.setItem('user', JSON.stringify(r.data.user));
-                            this.$router.replace('tasks');
-                        }
-                    }).catch((e) => {
-                        console.log(e);
-                    })
+                await authService.register(this.form, this.$store).then(() => {
+                    this.$router.replace('/')
+                })
             },
             onReset(evt) {
                 evt.preventDefault();

@@ -1,8 +1,9 @@
 import AppComponent from "./components/layout/AppComponent";
 import NotFound from "./components/NotFound";
 import HomeComponent from "./components/HomeComponent";
-import {AuthRoutes} from "./components/auth/auth.routes";
-import {TasksRoutes} from "./components/tasks/tasks.routes";
+import {AuthRoutes} from "./routes/auth.routes";
+import {TasksRoutes} from "./routes/tasks.routes";
+import SearchComponent from "./components/search/SearchComponent";
 
 const routes = [
     {
@@ -15,6 +16,11 @@ const routes = [
                 path: '',
                 component: HomeComponent,
                 name: 'home',
+            },
+            {
+                path: 'search-result',
+                component: SearchComponent,
+                name: 'search',
             },
         ]
     },

@@ -33,34 +33,27 @@
 </template>
 
 <script>
-    import {api_point, isLoggedIn, auth_token} from "../../enviroment";
+    import {authService} from '../../services/auth.service'
 
     export default {
         name: "LoginComponent",
+        mounted() {
+            this.$store.commit('checkFortToken')
+        },
         data() {
             return {
                 form: {
                     email: 'qwerty@em.co',
                     password: 'asd',
                 },
-                show: true,
-                isLoggedIn: isLoggedIn,
-                auth_token: auth_token,
+                show: true
             }
         },
         methods: {
-            onSubmit(evt) {
+            async onSubmit(evt) {
                 evt.preventDefault();
-                console.log(this.form);
-                axios.post(`${api_point}/login`, this.form).then((r) => {
-                    if (r.data.success){
-                        localStorage.setItem('token', r.data.token);
-                        localStorage.setItem('user', JSON.stringify(r.data.user));
-                        this.isLoggedIn = true;
-                        this.auth_token = localStorage.getItem('token');
-                    }
-                }).catch((e) => {
-                    console.log(e);
+                await authService.login(this.form, this.$store).then(() => {
+                    this.$router.replace('/')
                 })
             },
             onReset(evt) {

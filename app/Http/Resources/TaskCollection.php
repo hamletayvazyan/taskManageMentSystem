@@ -14,6 +14,30 @@ class TaskCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        $response = [
+            'tasks' => [],
+            'assigned' => [],
+        ];
+        $assigned = auth()->user()->assignedTasks;
+        foreach ($this->collection as $value){
+            $response['tasks'][] = [
+                'id' => $value->id,
+                'title' => $value->title,
+                'assigned' => $value->assigned,
+                'status' => $value->status,
+                'created_by' => $value->createdBy->name,
+            ];
+        }
+        foreach ($assigned as $item){
+            $response['tasks'][] = [
+                'id' => $item->id,
+                'title' => $item->title,
+                'assigned' => $item->assigned,
+                'status' => $item->status,
+                'created_by' => $item->createdBy->name,
+            ];
+        }
+        $response['assigned'] = $assigned;
+        return $response;
     }
 }

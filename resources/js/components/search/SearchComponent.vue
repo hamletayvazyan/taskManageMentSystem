@@ -1,8 +1,14 @@
 <template>
     <div>
-        <h2>all tasks</h2>
 
-        <table class="table">
+
+            <form @submit.prevent="search" class="input-group my-md-5 my-3">
+                <input type="text" class="form-control" v-model="searchKey" autocomplete="off"  placeholder="Search...">
+                <div class="input-group-append">
+                    <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
+                </div>
+            </form>
+        <table class="table" v-if="show">
             <thead>
             <tr>
                 <th>#</th>
@@ -20,13 +26,13 @@
                 </td>
                 <td>
                     <router-link  v-if="$store.state.isLoggedIn && task.created_by.id === $store.state.userDetails.id"
-                            :to="{name: 'tasks.edit', params: { id: task.id }}">{{task.title}}</router-link>
+                                  :to="{name: 'tasks.edit', params: { id: task.id }}">{{task.title}}</router-link>
 
                     <router-link  v-else
-                            :to="{name: 'tasks.show', params: { id: task.id }}">{{task.title}}</router-link>
+                                  :to="{name: 'tasks.show', params: { id: task.id }}">{{task.title}}</router-link>
                 </td>
                 <td>{{task.created_by.name}}</td>
-                <td>{{task.assigned.name}}</td>
+                <td>{{task.assigned_special.name}}</td>
                 <td>
                     <b-form-select v-if="$store.state.isLoggedIn"
                                    class="w-auto"
@@ -46,33 +52,45 @@
             </tr>
             </tbody>
         </table>
+        <div v-else class="text-center mt-2">
+            empty
+        </div>
     </div>
 </template>
 
 <script>
-    import {taskService} from '../services/task.service'
-
+    import {taskService} from '../../services/task.service'
     export default {
-        name: "HomeComponent",
+        name: "SearchComponent",
+        async mounted() {
+            await taskService.search({key: this.$route.query.key},this.$store).then((resp) => {
+                this.tasks = resp;
+                this.show =true;
+            })
+        },
+        methods: {
+            search: function() {
+                this.$route.query.key = this.searchKey;
+                taskService.search({key: this.searchKey}, this.$store).then((resp) => {
+                    this.tasks = resp;
+                    this.show =true;
+                })
+            },
+            changeStatus(id, value) {
+                taskService.changeStatus(id, {status: value}, this.$store).then()
+            }
+        },
         data() {
             return {
+                searchKey: null,
                 tasks: [],
                 show: false,
                 statuses: ['new', 'pending', 'completed']
             }
         },
-        async mounted() {
-            if (this.$store.state.isLoggedIn) {
-                this.$store.commit('userDetails')
-            }
-            await taskService.allTasks(this.$store).then((resp) => {
-                this.tasks = resp;
-            })
-        },
-        methods: {
-            changeStatus(id, value) {
-                taskService.changeStatus(id, {status: value}, this.$store).then()
-            }
-        }
     }
 </script>
+
+<style scoped>
+
+</style>

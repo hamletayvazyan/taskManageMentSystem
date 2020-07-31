@@ -1,6 +1,6 @@
 <template>
-    <div>
-        here goes footer
+    <div class="mt-5 text-right">
+        powered by Hamlet Ayvazyan
     </div>
 </template>
 

@@ -27,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','api_token'
+        'password', 'remember_token','api_token', 'pivot'
     ];
 
     /**
@@ -43,7 +43,7 @@ class User extends Authenticatable
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tasks(){
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Task::class, 'user_id', 'id');
     }
 
     /**

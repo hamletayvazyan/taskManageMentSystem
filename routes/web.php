@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 //Route::get('/{any}', function () {
 //    return view('home');
 //});
-Route::get('/{all?}', function () {
+Route::get('/{all?}/{other?}/{last?}', function () {
     return view('home');
 });
 //Auth::routes(['verify' => false]);

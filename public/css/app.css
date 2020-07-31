@@ -14122,3 +14122,8 @@ input[type=color].form-control:disabled {
   vertical-align: text-bottom;
 }
 
+.custom-position {
+  left: 20px;
+  top: 20px;
+}
+

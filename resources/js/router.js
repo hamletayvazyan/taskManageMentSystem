@@ -1,45 +1,75 @@
 import VueRouter from 'vue-router';
 window.Vue.use(VueRouter);
-import {isLoggedIn, auth_token} from "./enviroment";
-let logged = isLoggedIn;
-let token = auth_token;
-import {allRoutes, } from "./router-register";
+import Vuex from 'vuex'
+import 'es6-promise/auto'
 
+window.Vue.use(Vuex);
+import {allRoutes} from "./router-register";
+
+/**
+ * register all routes and guards
+ * */
 const routes = allRoutes;
-
 const router = new VueRouter({
     routes,
     linkExactActiveClass: 'active',
     mode: 'history'
 });
+
 router.beforeEach((to, from, next) => {
-    console.log(to, logged, (to.name === 'login' && logged));
-    switch (true) {
-        case to.name === 'login' && logged:
-        case to.name === 'register' && logged:
-        case to.name === 'reset-password' && logged:
-            next({name: 'home'});
-            break;
-        case to.name === 'login' && !logged:
-        case to.name === 'register' && !logged:
-        case to.name === 'reset-password' && !logged:
-            logged = false;
-            token = null;
-            next();
-            break;
-        case to.name === 'tasks' && logged:
-            next();
-            break;
-        case to.name === 'tasks' && !logged:
-            next({name: 'login'});
-            break;
-        default: next()
+    store.commit('checkFortToken');
+    let routeNames = [
+        'login',
+        'register',
+        'home',
+        'tasks.show',
+        'search',
+    ];
+    if (store.state.isLoggedIn) {
+        if (to.name === 'login' || to.name === 'register') next({name: 'tasks'})
+        next()
+    } else {
+        const checkRoute = routeNames.filter(i => i === to.name);
+        if (checkRoute.length === 0) next({name: 'home'});
+        next()
     }
 });
-new Vue({
-    router,
-    el: '#app',
-    data: {
-        auth_token: logged
+
+/**
+ * global state settings
+ * */
+const store = new Vuex.Store({
+    state: {
+        isLoggedIn: false,
+        userDetails: {},
+        loading: false,
+        alertVariant: 'success',
+        alertDismissSecs: 4,
+        alertDismissCountDown: 0,
+        alertShowDismissibleAlert: false,
+        message: '',
     },
-}).$mount('#app');
+    mutations: {
+        checkFortToken (state) {
+            const token = localStorage.getItem('token');
+            state.isLoggedIn = !!token;
+        },
+        userDetails (state) {
+            const user = localStorage.getItem('user');
+            state.userDetails = JSON.parse(user);
+        },
+        loading (state, canLoad) {
+            state.loading = canLoad;
+        },
+        newMessage (state, message) {
+            state.message = message;
+        },
+        showAlert (state, variant) {
+            state.alertDismissCountDown = state.alertDismissSecs;
+            state.alertVariant = variant;
+        }
+    }
+});
+
+
+new Vue({ router, store, el: '#app' }).$mount('#app');

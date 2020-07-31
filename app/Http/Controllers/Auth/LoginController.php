@@ -85,8 +85,8 @@ class LoginController extends Controller
         $apiToken->fillToken($request);
         return response()->json([
             'success' => true,
-            'user_info' => $loginCredentials,
-            'token' => auth()->user()->getRememberToken(),
+            'user' => $loginCredentials,
+            'token' => auth()->user()->api_token,
         ], 200);
     }
 

@@ -22,6 +22,7 @@ Vue.use(BootstrapVue, {
     // BButton: { variant: 'custom' }
 });
 Vue.use(IconsPlugin);
+Vue.config.async;
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

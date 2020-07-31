@@ -3,9 +3,8 @@
         <b-form @submit="onSubmit" @reset="onReset" v-if="show">
             <b-form-group
                     id="input-group-1"
-                    label="Email address:"
+                    label="Task Title"
                     label-for="input-1"
-                    description="We'll never share your email with anyone else."
             >
                 <b-form-input
                         id="input-1"
@@ -26,6 +25,16 @@
                 ></b-form-textarea>
             </b-form-group>
 
+            <b-form-group id="input-group-3" label="Assigned to:" label-for="input-3">
+                <b-form-select
+                        id="input-3"
+                        v-model="form.users"
+                        >
+                    <b-form-select-option :value="null">Please select an option</b-form-select-option>
+                    <b-form-select-option v-for="item in users" v-bind:key="item.id" v-bind:value="item.id">{{item.name}}</b-form-select-option>
+                </b-form-select>
+            </b-form-group>
+
             <b-button type="submit" variant="primary">Submit</b-button>
             <b-button type="reset" variant="danger">Reset</b-button>
         </b-form>
@@ -33,38 +42,31 @@
 </template>
 
 <script>
-    import {api_point, isLoggedIn, auth_token} from "../../enviroment";
+    import {taskService} from '../../services/task.service'
 
     export default {
         name: "CreateComponent",
-        beforeMount() {
-            axios.get(`${api_point}/users`, this.form).then((r) => {
-                if (r.data) {
-                    console.log(r.data);
-                }
-            }).catch((e) => {
-                console.log(e);
-            });
+        async beforeMount() {
+            await taskService.getUsers(this.$store).then((response) => {
+                this.users = response;
+                this.show = true;
+            })
         },
         data() {
             return {
                 form: {
-                    title: 'test task ',
-                    description: 'here is the description',
+                    title: '',
+                    description: '',
+                    users: [],
                 },
-                show: true,
+                show: false,
             }
         },
         methods: {
-            onSubmit(evt) {
+            async onSubmit(evt) {
                 evt.preventDefault();
-                console.log(this.form);
-                axios.post(`${api_point}/tasks`, this.form).then((r) => {
-                    if (r.data) {
-                        console.log(r);
-                    }
-                }).catch((e) => {
-                    console.log(e);
+                await taskService.createTask(this.form, this.$store).then((r) => {
+                    this.$router.replace('/tasks')
                 });
             },
             onReset(evt) {
