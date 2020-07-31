@@ -51,7 +51,7 @@
         methods: {
             onSubmit(evt) {
                 evt.preventDefault();
-                console.log(JSON.stringify(this.form));
+                console.log(this.form);
                 axios.post(`${api_point}/login`, this.form).then((r) => {
                     if (r.data.success){
                         localStorage.setItem('token', r.data.token);

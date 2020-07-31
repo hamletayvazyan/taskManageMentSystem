@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Resources\UsersCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -18,5 +19,13 @@ use Illuminate\Support\Facades\Auth;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Auth::routes();
+Route::group(['namespace' => 'Api', 'middleware' => 'auth:api'], function (){
+    Route::resource('tasks', 'TaskController');
+    Route::get('/users', function (Request $request){
+        return new UsersCollection($request->user());
+    });
+});
 
-Auth::routes(['verify' => false]);
+Route::get('/tasks', 'HomeController@index');
+Route::post('/checkLogin', 'HomeController@checkLogin');

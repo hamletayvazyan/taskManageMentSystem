@@ -2017,7 +2017,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       evt.preventDefault();
-      console.log(JSON.stringify(this.form));
+      console.log(this.form);
       axios.post("".concat(_enviroment__WEBPACK_IMPORTED_MODULE_0__["api_point"], "/login"), this.form).then(function (r) {
         if (r.data.success) {
           localStorage.setItem('token', r.data.token);
@@ -2286,6 +2286,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "HeaderComponent",
@@ -2325,12 +2326,88 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _enviroment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../enviroment */ "./resources/js/enviroment.js");
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "CreateComponent"
+  name: "CreateComponent",
+  beforeMount: function beforeMount() {
+    axios.get("".concat(_enviroment__WEBPACK_IMPORTED_MODULE_0__["api_point"], "/users"), this.form).then(function (r) {
+      if (r.data) {
+        console.log(r.data);
+      }
+    })["catch"](function (e) {
+      console.log(e);
+    });
+  },
+  data: function data() {
+    return {
+      form: {
+        title: 'test task ',
+        description: 'here is the description'
+      },
+      show: true
+    };
+  },
+  methods: {
+    onSubmit: function onSubmit(evt) {
+      evt.preventDefault();
+      console.log(this.form);
+      axios.post("".concat(_enviroment__WEBPACK_IMPORTED_MODULE_0__["api_point"], "/tasks"), this.form).then(function (r) {
+        if (r.data) {
+          console.log(r);
+        }
+      })["catch"](function (e) {
+        console.log(e);
+      });
+    },
+    onReset: function onReset(evt) {
+      var _this = this;
+
+      evt.preventDefault(); // Reset our form values
+
+      this.form.title = null;
+      this.form.description = null; // Trick to reset/clear native browser form validation state
+
+      this.show = false;
+      this.$nextTick(function () {
+        _this.show = true;
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -67063,7 +67140,13 @@ var render = function() {
                     [
                       _c("b-nav-item", { attrs: { to: { name: "tasks" } } }, [
                         _vm._v("tasks")
-                      ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "b-nav-item",
+                        { attrs: { to: { name: "tasks.create" } } },
+                        [_vm._v("create")]
+                      )
                     ],
                     1
                   )
@@ -67177,7 +67260,90 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div")
+  return _c(
+    "div",
+    [
+      _vm.show
+        ? _c(
+            "b-form",
+            { on: { submit: _vm.onSubmit, reset: _vm.onReset } },
+            [
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    id: "input-group-1",
+                    label: "Email address:",
+                    "label-for": "input-1",
+                    description:
+                      "We'll never share your email with anyone else."
+                  }
+                },
+                [
+                  _c("b-form-input", {
+                    attrs: {
+                      id: "input-1",
+                      type: "text",
+                      required: "",
+                      placeholder: "Enter title"
+                    },
+                    model: {
+                      value: _vm.form.title,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "title", $$v)
+                      },
+                      expression: "form.title"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-group",
+                {
+                  attrs: {
+                    id: "textarea",
+                    label: "Description: ",
+                    "label-for": "textarea"
+                  }
+                },
+                [
+                  _c("b-form-textarea", {
+                    attrs: {
+                      id: "textarea",
+                      placeholder: "Enter something...",
+                      rows: "3",
+                      "max-rows": "6"
+                    },
+                    model: {
+                      value: _vm.form.description,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "description", $$v)
+                      },
+                      expression: "form.description"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-button",
+                { attrs: { type: "submit", variant: "primary" } },
+                [_vm._v("Submit")]
+              ),
+              _vm._v(" "),
+              _c("b-button", { attrs: { type: "reset", variant: "danger" } }, [
+                _vm._v("Reset")
+              ])
+            ],
+            1
+          )
+        : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -82516,9 +82682,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var personal_token = localStorage.getItem('token');
 
 if (personal_token) {
-  axios.defaults.headers.common = {
-    'Authorization': "bearer ".concat(personal_token)
-  };
+  window.axios.defaults.headers.common['Authorization'] = "Bearer ".concat(personal_token);
 }
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -83417,20 +83581,21 @@ __webpack_require__.r(__webpack_exports__);
 var TasksRoutes = [{
   path: 'tasks',
   component: _IndexComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
-  name: 'tasks',
-  children: [{
-    path: '/create',
-    component: _CreateComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
-    name: 'tasks.create'
-  }, {
-    path: '/edit/:id',
-    component: _EditComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
-    name: 'tasks.edit'
-  }, {
-    path: '/show/:id',
-    component: _ShowComponent__WEBPACK_IMPORTED_MODULE_3__["default"],
-    name: 'tasks.show'
-  }]
+  name: 'tasks' // children: [
+  // ]
+
+}, {
+  path: '/create',
+  component: _CreateComponent__WEBPACK_IMPORTED_MODULE_1__["default"],
+  name: 'tasks.create'
+}, {
+  path: '/edit/:id',
+  component: _EditComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
+  name: 'tasks.edit'
+}, {
+  path: '/show/:id',
+  component: _ShowComponent__WEBPACK_IMPORTED_MODULE_3__["default"],
+  name: 'tasks.show'
 }];
 
 /***/ }),

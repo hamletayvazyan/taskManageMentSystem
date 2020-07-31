@@ -18,7 +18,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 const personal_token = localStorage.getItem('token');
 if (personal_token){
-    axios.defaults.headers.common = {'Authorization': `bearer ${personal_token}`};
+    window.axios.defaults.headers.common['Authorization'] =`Bearer ${personal_token}`;
 }
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

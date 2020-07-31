@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Auth;
 //Route::get('/{any}', function () {
 //    return view('home');
 //});
-Route::get('{path}', function () {
+Route::get('/{all?}', function () {
     return view('home');
-})->where('path', '(.*)');
+});
 //Auth::routes(['verify' => false]);
 
+//Route::any('{all?}/{any?}/{anything?}/{something?}' , function (){
+//    return view('app');
+//});

@@ -82,14 +82,11 @@ class LoginController extends Controller
             'name' => $user->name,
             'email' => $user->email,
         ];
-
-        $generateToken = $apiToken->fillToken($request);
-
+        $apiToken->fillToken($request);
         return response()->json([
             'success' => true,
             'user_info' => $loginCredentials,
-            ' auth()->user()' => auth()->user(),
-            'token' => $generateToken['token'],
+            'token' => auth()->user()->getRememberToken(),
         ], 200);
     }
 

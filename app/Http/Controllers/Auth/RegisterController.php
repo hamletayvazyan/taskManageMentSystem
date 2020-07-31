@@ -94,10 +94,10 @@ class RegisterController extends Controller
     protected function registered(Request $request, $user)
     {
         $apiToken = new ApiTokenController();
-        $generateToken = $apiToken->fillToken($request);
+        $apiToken->fillToken($request);
         return response()->json([
             'success' => true,
-            'token' => $generateToken['token'],
+            'token' => $user->api_token,
             'user' => $user
         ]);
     }

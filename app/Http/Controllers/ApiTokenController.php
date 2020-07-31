@@ -15,7 +15,7 @@ class ApiTokenController extends Controller
      */
     public function index(Request $request)
     {
-        return ['token' => $request->user()->remember_token];
+        return ['token' => $request->user()->api_token];
     }
     /**
      * Update the authenticated user's API token.
@@ -28,7 +28,7 @@ class ApiTokenController extends Controller
         $token = Str::random(80);
 
         $request->user()->forceFill([
-            'remember_token' => hash('sha256', $token),
+            'api_token' => hash('sha256', $token),
         ])->save();
 
         return ['token' => $token];
@@ -42,7 +42,7 @@ class ApiTokenController extends Controller
     public function remove(Request $request)
     {
         $request->user()->forceFill([
-            'remember_token' => null,
+            'api_token' => null,
         ])->save();
         return ['message' => 'logged out'];
     }

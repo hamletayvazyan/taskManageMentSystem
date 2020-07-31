@@ -8,22 +8,23 @@ export const TasksRoutes = [
         path: 'tasks',
         component: IndexComponent,
         name: 'tasks',
-        children: [
-            {
-                path: '/create',
-                component: CreateComponent,
-                name: 'tasks.create'
-            },
-            {
-                path: '/edit/:id',
-                component: EditComponent,
-                name: 'tasks.edit'
-            },
-            {
-                path: '/show/:id',
-                component: ShowComponent,
-                name: 'tasks.show'
-            }
-        ]
+        // children: [
+
+        // ]
     },
+    {
+        path: '/create',
+        component: CreateComponent,
+        name: 'tasks.create'
+    },
+    {
+        path: '/edit/:id',
+        component: EditComponent,
+        name: 'tasks.edit'
+    },
+    {
+        path: '/show/:id',
+        component: ShowComponent,
+        name: 'tasks.show'
+    }
 ];

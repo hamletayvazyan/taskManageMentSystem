@@ -11,6 +11,7 @@
                 </b-navbar-nav>
                 <b-navbar-nav v-if="auth_token" >
                     <b-nav-item :to="{name: 'tasks'}">tasks</b-nav-item>
+                    <b-nav-item :to="{name: 'tasks.create'}">create</b-nav-item>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
